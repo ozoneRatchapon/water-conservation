@@ -198,3 +198,7 @@ The Greenmove program implements the following core logic:
 
 ###   8. Development Status
 // in progress
+
+### Additional Resources
+
+* Project Planning and Details: [Greenmove Project Details](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
