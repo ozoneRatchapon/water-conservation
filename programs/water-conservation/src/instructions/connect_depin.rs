@@ -1,8 +1,8 @@
+use crate::state::{EnergyMeter, Property, User, UserReward, WaterMeter};
 use anchor_lang::prelude::*;
 
-use crate::state::*;
-
 #[derive(Accounts)]
+#[instruction(property_external_id: String)]
 pub struct ConnectDepin<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
@@ -14,27 +14,88 @@ pub struct ConnectDepin<'info> {
             bump
         )]
     pub user_data: Account<'info, User>,
+
+    #[account(
+            init,
+            payer = user,
+            space = Property::INIT_SPACE,
+            seeds = [b"property", user.key().as_ref(), property_external_id.as_bytes()],
+            bump
+        )]
+    pub property_account: Account<'info, Property>,
+
+    #[account(
+            init,
+            payer = user,
+            space = WaterMeter::INIT_SPACE,
+            seeds = [b"water_meter", user.key().as_ref(), property_external_id.as_bytes()],
+            bump
+        )]
+    pub water_meter_account: Account<'info, WaterMeter>,
+
+    #[account(
+            init,
+            payer = user,
+            space = EnergyMeter::INIT_SPACE,
+            seeds = [b"energy_meter", user.key().as_ref(), property_external_id.as_bytes()],
+            bump
+        )]
+    pub energy_meter_account: Account<'info, EnergyMeter>,
+
+    #[account(mut)]
+    pub reward_account: Account<'info, UserReward>,
     pub system_program: Program<'info, System>,
 }
 
 impl ConnectDepin<'_> {
     pub fn connect_depin_feed_address(
         &mut self,
-        external_account_id: String,
-        depin_feed_address: Pubkey,
+        property_external_id: String,
+        water_external_id: String,
+        energy_external_id: String,
+        water_depin_feed_address: Pubkey,
+        energy_depin_feed_address: Pubkey,
         bumps: &ConnectDepinBumps,
     ) -> Result<()> {
         self.user_data.set_inner(User {
             owner: self.user.key(),
-            external_account_id,
-            depin_feed_address,
-            usage_history: Vec::new(),
-            baseline_usage: 0,
-            reward_token_balance: 0,
-            redemption_history: Vec::new(),
+            property_account: Vec::from([self.property_account.key()]),
+            reward_account: todo!(),
             registration_timestamp: Clock::get()?.unix_timestamp,
             bump: bumps.user_data,
         });
+
+        self.property_account.set_inner(Property {
+            owner: self.user.key(),
+            property_external_id,
+            water_meter_accounts: Vec::from([self.water_meter_account.key()]),
+            energy_meter_accounts: Vec::from([self.energy_meter_account.key()]),
+        });
+
+        self.water_meter_account.set_inner(WaterMeter {
+            property: self.property_account.key(),
+            water_meter_account: self.water_meter_account.key(),
+            water_external_id,
+            usage_history: Vec::new(),
+            last_calculated_timestamp: 0,
+            depin_feed_address: water_depin_feed_address,
+        });
+
+        self.energy_meter_account.set_inner(EnergyMeter {
+            property: self.property_account.key(),
+            energy_meter_account: self.energy_meter_account.key(),
+            energy_external_id,
+            consumption_history: Vec::new(),
+            last_calculated_timestamp: 0,
+            depin_feed_address: energy_depin_feed_address,
+        });
+
+        self.reward_account.set_inner(UserReward {
+            owner: self.user.key(),
+            total_reward_balance: 0,
+            redemption_history: Vec::new(),
+        });
+
         Ok(())
     }
 }
