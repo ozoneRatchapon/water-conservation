@@ -27,7 +27,7 @@ pub struct ReceiveEnvironmentData<'info> {
     pub reward_account: Account<'info, UserReward>,
 }
 
-impl ReceiveEnvironmentData<'_> {
+impl<'info> ReceiveEnvironmentData<'info> {
     pub fn receive_water_usage(&mut self, amount: u64) -> Result<()> {
         let baseline_usage =
             Self::calculate_baseline_water(&self.water_meter_account.usage_history);
@@ -39,6 +39,8 @@ impl ReceiveEnvironmentData<'_> {
                 baseline_usage,
             });
         self.water_meter_account.last_calculated_timestamp = Clock::get()?.unix_timestamp;
+
+        self.reward_account.total_reward_balance += Self::calculate_points(baseline_usage, amount);
         Ok(())
     }
 
@@ -53,6 +55,7 @@ impl ReceiveEnvironmentData<'_> {
                 baseline_usage,
             });
         self.energy_meter_account.last_calculated_timestamp = Clock::get()?.unix_timestamp;
+        self.reward_account.total_reward_balance += Self::calculate_points(baseline_usage, amount);
         Ok(())
     }
 
@@ -88,7 +91,7 @@ impl ReceiveEnvironmentData<'_> {
         }
     }
 
-    fn calculate_water_points(baseline_usage: u64, current_usage: u64) -> u64 {
+    fn calculate_points(baseline_usage: u64, current_usage: u64) -> u64 {
         // (Same points calculation as before)
         if baseline_usage == 0 {
             return 0;
