@@ -11,7 +11,6 @@ pub struct UserReward {
 pub struct RedemptionRecord {
     pub timestamp: i64,
     pub amount: u64,
-    pub reward_type: String,
 }
 
 impl Space for UserReward {

@@ -42,4 +42,8 @@ pub mod water_conservation {
     ) -> Result<()> {
         ctx.accounts.receive_energy_consumption(amount)
     }
+
+    pub fn redeem_rewards(ctx: Context<RedeemReward>, amount: u64) -> Result<()> {
+        ctx.accounts.redeem_rewards(amount)
+    }
 }
