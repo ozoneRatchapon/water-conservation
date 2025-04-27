@@ -18,4 +18,6 @@ pub enum GreenmoveError {
     ExcessiveEnergyConsumption,
     #[msg("Excessive water consumption")]
     ExcessiveWaterConsumption,
+    #[msg("Insufficient points")]
+    InsufficientPoints,
 }
