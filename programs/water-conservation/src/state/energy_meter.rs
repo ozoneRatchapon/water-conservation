@@ -8,6 +8,8 @@ pub struct EnergyMeter {
     pub consumption_history: Vec<EnergyConsumptionRecord>, //
     pub last_calculated_timestamp: i64,
     pub depin_feed_address: Pubkey, // Switchboard feed address
+    pub total_energy_saved: u64,
+    pub total_energy_consumed: u64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]

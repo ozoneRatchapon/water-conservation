@@ -39,7 +39,11 @@ impl<'info> ReceiveEnvironmentData<'info> {
                 baseline_usage,
             });
         self.water_meter_account.last_calculated_timestamp = Clock::get()?.unix_timestamp;
-
+        self.water_meter_account.total_water_consumed += amount;
+        let total_save_this_round: u64 = baseline_usage.checked_sub(amount).unwrap_or(0);
+        if total_save_this_round > 0 {
+            self.water_meter_account.total_water_saved += total_save_this_round;
+        }
         self.reward_account.total_reward_balance += Self::calculate_points(baseline_usage, amount);
         Ok(())
     }
@@ -55,6 +59,13 @@ impl<'info> ReceiveEnvironmentData<'info> {
                 baseline_usage,
             });
         self.energy_meter_account.last_calculated_timestamp = Clock::get()?.unix_timestamp;
+
+        self.energy_meter_account.total_energy_consumed += amount;
+        let total_save_this_round: u64 = baseline_usage.checked_sub(amount).unwrap_or(0);
+        if total_save_this_round > 0 {
+            self.energy_meter_account.total_energy_saved += total_save_this_round;
+        }
+
         self.reward_account.total_reward_balance += Self::calculate_points(baseline_usage, amount);
         Ok(())
     }

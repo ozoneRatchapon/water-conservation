@@ -8,6 +8,8 @@ pub struct WaterMeter {
     pub usage_history: Vec<WaterUsageRecord>, //
     pub last_calculated_timestamp: i64,
     pub depin_feed_address: Pubkey, // Switchboard feed address
+    pub total_water_saved: u64,
+    pub total_water_consumed: u64,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]

@@ -79,6 +79,8 @@ impl ConnectDepin<'_> {
             usage_history: Vec::new(),
             last_calculated_timestamp: 0,
             depin_feed_address: water_depin_feed_address,
+            total_water_saved: 0,
+            total_water_consumed: 0,
         });
 
         self.energy_meter_account.set_inner(EnergyMeter {
@@ -88,6 +90,8 @@ impl ConnectDepin<'_> {
             consumption_history: Vec::new(),
             last_calculated_timestamp: 0,
             depin_feed_address: energy_depin_feed_address,
+            total_energy_saved: 0,
+            total_energy_consumed: 0,
         });
 
         self.reward_account.set_inner(UserReward {
