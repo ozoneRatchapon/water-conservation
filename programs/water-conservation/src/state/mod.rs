@@ -1,2 +1,10 @@
 pub mod user;
 pub use user::*;
+pub mod property;
+pub use property::*;
+pub mod water_meter;
+pub use water_meter::*;
+pub mod energy_meter;
+pub use energy_meter::*;
+pub mod reward;
+pub use reward::*;

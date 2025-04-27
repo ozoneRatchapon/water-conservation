@@ -2,28 +2,11 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct User {
-    pub owner: Pubkey,                   // 1. Owner of the account (user's wallet)
-    pub external_account_id: String,     // 2. Identifier for the user's external account
-    pub depin_feed_address: Pubkey,      // 3. Address of the DePIN feed providing water data
-    pub usage_history: Vec<UsageRecord>, // 4. History of water usage
-    pub baseline_usage: u64,             // 5. User's baseline water consumption
-    pub reward_token_balance: u64,       // 6. User's Greenmove point balance
-    pub redemption_history: Vec<RedemptionRecord>, // 7. History of reward redemptions
-    pub registration_timestamp: i64,     // 8. Timestamp of when the user registered
-    pub bump: u8,                        // 9. Bump seed for the account
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
-pub struct UsageRecord {
-    pub timestamp: i64,
-    pub amount: u64,
-}
-
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
-pub struct RedemptionRecord {
-    pub timestamp: i64,
-    pub amount: u64,
-    pub reward_type: String,
+    pub owner: Pubkey,                 // 1. Owner of the account (user's wallet)
+    pub property_account: Vec<Pubkey>, // 2. Property account associated with the user
+    pub reward_account: Pubkey,        // 3. Reward account associated with the user
+    pub registration_timestamp: i64,   // 4. Timestamp of when the user registered
+    pub bump: u8,                      // 5. Bump seed for the account
 }
 
 impl Space for User {
