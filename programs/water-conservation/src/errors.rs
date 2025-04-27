@@ -6,4 +6,6 @@ pub enum WaterConservationError {
     InsufficientBalance,
     InvalidState,
     InvalidInstruction,
+    #[msg("Invalid Depin Feed Address")]
+    InvalidDepinFeedAddress,
 }

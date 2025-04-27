@@ -3,13 +3,14 @@ use anchor_lang::prelude::*;
 #[account]
 pub struct User {
     pub owner: Pubkey,                   // 1. Owner of the account (user's wallet)
-    pub water_account_id: String,        // 2. Identifier for the user's external water account
+    pub external_account_id: String,     // 2. Identifier for the user's external account
     pub depin_feed_address: Pubkey,      // 3. Address of the DePIN feed providing water data
     pub usage_history: Vec<UsageRecord>, // 4. History of water usage
     pub baseline_usage: u64,             // 5. User's baseline water consumption
     pub reward_token_balance: u64,       // 6. User's Greenmove point balance
     pub redemption_history: Vec<RedemptionRecord>, // 7. History of reward redemptions
     pub registration_timestamp: i64,     // 8. Timestamp of when the user registered
+    pub bump: u8,                        // 9. Bump seed for the account
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
@@ -35,5 +36,6 @@ impl Space for User {
     // space for reward token balance is 8 bytes
     // space for redemption history is 32 bytes
     // space for registration timestamp is 8 bytes
-    const INIT_SPACE: usize = 8 + 32 + 32 + 32 + 32 + 8 + 8 + 32 + 8;
+    // space for bump seed is 1 byte
+    const INIT_SPACE: usize = 8 + 32 + 32 + 32 + 32 + 8 + 8 + 32 + 8 + 1;
 }
