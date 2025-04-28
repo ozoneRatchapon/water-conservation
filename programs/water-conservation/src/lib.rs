@@ -6,7 +6,6 @@ pub mod instructions;
 pub mod state;
 
 use crate::instructions::*;
-use crate::state::*;
 
 declare_id!("CYgCc27FKtjZBwkDjeZ6VfyiifvbdBv9e9Q8Zn872jAK");
 
@@ -32,15 +31,20 @@ pub mod water_conservation {
         )
     }
 
-    pub fn receive_water_usage(ctx: Context<ReceiveEnvironmentData>, amount: u64) -> Result<()> {
-        ctx.accounts.receive_water_usage(amount)
+    pub fn receive_water_usage(
+        ctx: Context<ReceiveEnvironmentData>,
+        _water_external_id: String,
+        usage_amount: u64,
+    ) -> Result<()> {
+        ctx.accounts.receive_water_usage(usage_amount)
     }
 
     pub fn receive_energy_consumption(
         ctx: Context<ReceiveEnvironmentData>,
-        amount: u64,
+        _energy_external_id: String,
+        usage_amount: u64,
     ) -> Result<()> {
-        ctx.accounts.receive_energy_consumption(amount)
+        ctx.accounts.receive_energy_consumption(usage_amount)
     }
 
     pub fn redeem_rewards(ctx: Context<RedeemRewards>, reward_amount: u64) -> Result<()> {
