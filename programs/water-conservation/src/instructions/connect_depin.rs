@@ -60,7 +60,7 @@ impl ConnectDepin<'_> {
         self.user_data.set_inner(User {
             owner: self.user.key(),
             property_account: Vec::from([self.property_account.key()]),
-            reward_account: todo!(),
+            reward_account: self.reward_account.key(),
             registration_timestamp: Clock::get()?.unix_timestamp,
             bump: bumps.user_data,
         });
