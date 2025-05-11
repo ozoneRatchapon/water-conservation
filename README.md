@@ -202,3 +202,9 @@ The Greenmove program implements the following core logic:
 ### Additional Resources
 
 * Project Planning and Details: [Greenmove Project Details](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
+
+## Deployed Program (Devnet)
+
+The Greenmove Solana program (water conservation) is deployed on devnet with the following details:
+
+- **Program ID:** 9xaLoQx2x1xaum16rXQkPwpCsKbgErGqyXVrJstzD6Ff 
