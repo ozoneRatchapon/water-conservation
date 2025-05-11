@@ -2,7 +2,6 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
-#[instruction(water_external_id: String, energy_external_id: String)] // Receive the meter IDs
 pub struct ReceiveEnvironmentData<'info> {
     pub owner: Signer<'info>,
     #[account(
@@ -22,7 +21,6 @@ pub struct ReceiveEnvironmentData<'info> {
     #[account(
         mut,
         has_one = property,
-        constraint = water_meter_account.water_external_id == water_external_id, // Match the incoming ID
         seeds = [b"water_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes()],
         bump
     )]
@@ -31,7 +29,6 @@ pub struct ReceiveEnvironmentData<'info> {
     #[account(
         mut,
         has_one = property,
-        constraint = energy_meter_account.energy_external_id == energy_external_id, // Match the incoming ID
         seeds = [b"energy_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes()],
         bump
     )]
@@ -91,7 +88,12 @@ impl<'info> ReceiveEnvironmentData<'info> {
     }
 
     fn calculate_baseline_water(usage_history: &Vec<WaterUsageRecord>) -> u64 {
-        // (Same baseline calculation as before)
+        // If there's no history, return a default baseline of 120 units
+        if usage_history.is_empty() {
+            return 120; // Default baseline for first-time water usage
+        }
+        
+        // Calculate baseline from history
         let last_6_months = usage_history.iter().rev().take(6);
         let mut total_usage = 0;
         let mut count = 0;
@@ -102,12 +104,17 @@ impl<'info> ReceiveEnvironmentData<'info> {
         if count > 0 {
             total_usage / count
         } else {
-            0
+            120 // Fallback to default baseline
         }
     }
 
     fn calculate_baseline_energy(usage_history: &Vec<EnergyConsumptionRecord>) -> u64 {
-        // (Same baseline calculation as before)
+        // If there's no history, return a default baseline of 80 units
+        if usage_history.is_empty() {
+            return 80; // Default baseline for first-time energy usage
+        }
+        
+        // Calculate baseline from history
         let last_6_months = usage_history.iter().rev().take(6);
         let mut total_usage = 0;
         let mut count = 0;
@@ -118,7 +125,7 @@ impl<'info> ReceiveEnvironmentData<'info> {
         if count > 0 {
             total_usage / count
         } else {
-            0
+            80 // Fallback to default baseline
         }
     }
 

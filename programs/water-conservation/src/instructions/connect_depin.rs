@@ -42,7 +42,11 @@ pub struct ConnectDepin<'info> {
         )]
     pub energy_meter_account: Account<'info, EnergyMeter>,
 
-    #[account(mut)]
+    #[account(init,
+    payer = user,
+    space = UserReward::INIT_SPACE,
+    seeds = [b"user_reward", user.key().as_ref()],
+    bump)]
     pub reward_account: Account<'info, UserReward>,
     pub system_program: Program<'info, System>,
 }

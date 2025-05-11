@@ -33,17 +33,27 @@ pub mod water_conservation {
 
     pub fn receive_water_usage(
         ctx: Context<ReceiveEnvironmentData>,
-        _water_external_id: String,
+        water_external_id: String,
         usage_amount: u64,
     ) -> Result<()> {
+        // Validate the water meter external ID
+        require!(
+            ctx.accounts.water_meter_account.water_external_id == water_external_id,
+            ErrorCode::ConstraintRaw
+        );
         ctx.accounts.receive_water_usage(usage_amount)
     }
 
     pub fn receive_energy_consumption(
         ctx: Context<ReceiveEnvironmentData>,
-        _energy_external_id: String,
+        energy_external_id: String,
         usage_amount: u64,
     ) -> Result<()> {
+        // Validate the energy meter external ID
+        require!(
+            ctx.accounts.energy_meter_account.energy_external_id == energy_external_id,
+            ErrorCode::ConstraintRaw
+        );
         ctx.accounts.receive_energy_consumption(usage_amount)
     }
 
