@@ -74,8 +74,12 @@ impl ConnectDepin<'_> {
         self.property_account.set_inner(Property {
             owner: self.user.key(),
             property_external_id,
-            water_meter_accounts: Vec::from([self.water_meter_account.key()]),
-            energy_meter_accounts: Vec::from([self.energy_meter_account.key()]),
+            water_meter_accounts: vec![self.water_meter_account.key()],
+            energy_meter_accounts: if track_energy {
+                vec![self.energy_meter_account.key()]
+            } else {
+                vec![]
+            },
             bump: bumps.property_account,
         });
 
