@@ -2,7 +2,7 @@ use crate::state::{EnergyMeter, Property, User, UserReward, WaterMeter};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
-#[instruction(property_external_id: String, track_energy: bool)]
+#[instruction(property_external_id: String, water_external_id: String, energy_external_id: String, track_energy: bool)]
 pub struct ConnectDepin<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
@@ -28,7 +28,7 @@ pub struct ConnectDepin<'info> {
             init,
             payer = user,
             space = WaterMeter::INIT_SPACE,
-            seeds = [b"water_meter", user.key().as_ref(), property_external_id.as_bytes()],
+            seeds = [b"water_meter", user.key().as_ref(), property_external_id.as_bytes(), water_external_id.as_bytes()],
             bump
         )]
     pub water_meter_account: Account<'info, WaterMeter>,
@@ -37,7 +37,7 @@ pub struct ConnectDepin<'info> {
             init_if_needed,
             payer = user,
             space = EnergyMeter::INIT_SPACE,
-            seeds = [b"energy_meter", user.key().as_ref(), property_external_id.as_bytes()],
+            seeds = [b"energy_meter", user.key().as_ref(), property_external_id.as_bytes(), energy_external_id.as_bytes()],
             bump,
             constraint = track_energy
         )]
