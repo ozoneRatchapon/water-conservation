@@ -22,4 +22,12 @@ pub enum GreenmoveError {
     InsufficientPoints,
     #[msg("Invalid usage data")]
     InvalidUsageData,
+    #[msg("Invalid energy consumption data")]
+    InvalidEnergyConsumptionData,
+    #[msg("Invalid property external ID")]
+    InvalidPropertyExternalId,
+    #[msg("Invalid water external ID")]
+    InvalidWaterExternalId,
+    #[msg("Invalid energy external ID")]
+    InvalidEnergyExternalId,
 }

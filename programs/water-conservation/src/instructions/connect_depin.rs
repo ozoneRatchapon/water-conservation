@@ -1,6 +1,8 @@
 use crate::state::{EnergyMeter, Property, User, UserReward, WaterMeter};
 use anchor_lang::prelude::*;
 
+use crate::errors::GreenmoveError as ErrorCode;
+
 #[derive(Accounts)]
 #[instruction(property_external_id: String, water_external_id: String, energy_external_id: String, track_energy: bool)]
 pub struct ConnectDepin<'info> {
@@ -63,11 +65,25 @@ impl ConnectDepin<'_> {
         track_energy: bool,
         bumps: &ConnectDepinBumps,
     ) -> Result<()> {
+        // Use a single timestamp for all related accounts for traceability
+        let now = Clock::get()?.unix_timestamp;
+
+        // Basic error handling: check for empty external IDs
+        if property_external_id.is_empty() {
+            return Err(error!(ErrorCode::InvalidPropertyExternalId));
+        }
+        if water_external_id.is_empty() {
+            return Err(error!(ErrorCode::InvalidWaterExternalId));
+        }
+        if track_energy && energy_external_id.is_empty() {
+            return Err(error!(ErrorCode::InvalidEnergyExternalId));
+        }
+
         self.user_data.set_inner(User {
             owner: self.user.key(),
             property_account: Vec::from([self.property_account.key()]),
             reward_account: self.reward_account.key(),
-            registration_timestamp: Clock::get()?.unix_timestamp,
+            registration_timestamp: now,
             bump: bumps.user_data,
         });
 
@@ -92,10 +108,10 @@ impl ConnectDepin<'_> {
             water_meter_account: self.water_meter_account.key(),
             water_external_id,
             usage_history: Vec::new(),
-            last_calculated_timestamp: 0,
+            last_calculated_timestamp: now, // Use consistent timestamp
             depin_feed_address: water_depin_feed_address,
-            total_water_saved: 0,
-            total_water_consumed: 0,
+            total_water_saved: 0, // Always initialize to zero
+            total_water_consumed: 0, // Always initialize to zero
             bump: bumps.water_meter_account,
         });
 
@@ -105,17 +121,17 @@ impl ConnectDepin<'_> {
                 energy_meter_account: self.energy_meter_account.key(),
                 energy_external_id,
                 consumption_history: Vec::new(),
-                last_calculated_timestamp: 0,
+                last_calculated_timestamp: now, // Use consistent timestamp
                 depin_feed_address: energy_depin_feed_address,
-                total_energy_saved: 0,
-                total_energy_consumed: 0,
+                total_energy_saved: 0, // Always initialize to zero
+                total_energy_consumed: 0, // Always initialize to zero
                 bump: bumps.energy_meter_account,
             });
         }
 
         self.reward_account.set_inner(UserReward {
             owner: self.user.key(),
-            total_reward_balance: 0,
+            total_reward_balance: 0, // Always initialize to zero
             redemption_history: Vec::new(),
             bump: bumps.reward_account,
         });
