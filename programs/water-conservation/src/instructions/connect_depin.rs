@@ -87,6 +87,7 @@ impl ConnectDepin<'_> {
             depin_feed_address: water_depin_feed_address,
             total_water_saved: 0,
             total_water_consumed: 0,
+            bump: bumps.water_meter_account,
         });
 
         if track_energy {
@@ -99,6 +100,7 @@ impl ConnectDepin<'_> {
                 depin_feed_address: energy_depin_feed_address,
                 total_energy_saved: 0,
                 total_energy_consumed: 0,
+                bump: bumps.energy_meter_account,
             });
         }
 
