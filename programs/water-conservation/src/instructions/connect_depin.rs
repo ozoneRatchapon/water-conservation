@@ -2,12 +2,12 @@ use crate::state::{EnergyMeter, Property, User, UserReward, WaterMeter};
 use anchor_lang::prelude::*;
 
 #[derive(Accounts)]
-#[instruction(property_external_id: String)]
+#[instruction(property_external_id: String, track_energy: bool)]
 pub struct ConnectDepin<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
     #[account(
-            init_if_needed,
+            init,
             payer = user,
             space = User::INIT_SPACE,
             seeds = [b"user_data", user.key().as_ref()],
@@ -34,11 +34,12 @@ pub struct ConnectDepin<'info> {
     pub water_meter_account: Account<'info, WaterMeter>,
 
     #[account(
-            init,
+            init_if_needed,
             payer = user,
             space = EnergyMeter::INIT_SPACE,
             seeds = [b"energy_meter", user.key().as_ref(), property_external_id.as_bytes()],
-            bump
+            bump,
+            constraint = track_energy
         )]
     pub energy_meter_account: Account<'info, EnergyMeter>,
 
@@ -59,6 +60,7 @@ impl ConnectDepin<'_> {
         energy_external_id: String,
         water_depin_feed_address: Pubkey,
         energy_depin_feed_address: Pubkey,
+        track_energy: bool,
         bumps: &ConnectDepinBumps,
     ) -> Result<()> {
         self.user_data.set_inner(User {
@@ -87,16 +89,18 @@ impl ConnectDepin<'_> {
             total_water_consumed: 0,
         });
 
-        self.energy_meter_account.set_inner(EnergyMeter {
-            property: self.property_account.key(),
-            energy_meter_account: self.energy_meter_account.key(),
-            energy_external_id,
-            consumption_history: Vec::new(),
-            last_calculated_timestamp: 0,
-            depin_feed_address: energy_depin_feed_address,
-            total_energy_saved: 0,
-            total_energy_consumed: 0,
-        });
+        if track_energy {
+            self.energy_meter_account.set_inner(EnergyMeter {
+                property: self.property_account.key(),
+                energy_meter_account: self.energy_meter_account.key(),
+                energy_external_id,
+                consumption_history: Vec::new(),
+                last_calculated_timestamp: 0,
+                depin_feed_address: energy_depin_feed_address,
+                total_energy_saved: 0,
+                total_energy_consumed: 0,
+            });
+        }
 
         self.reward_account.set_inner(UserReward {
             owner: self.user.key(),
