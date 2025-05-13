@@ -10,6 +10,7 @@ pub struct EnergyMeter {
     pub depin_feed_address: Pubkey, // Switchboard feed address
     pub total_energy_saved: u64,
     pub total_energy_consumed: u64,
+    pub bump: u8,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
@@ -23,8 +24,11 @@ impl Space for EnergyMeter {
     // space for property_external_id string is 32
     // space for energy_meter_account Pubkey is 32
     // space for energy_external_id String is 32
-    // space for consumption_history Vec<EnergyRecord> is 32
+    // space for consumption_history Vec<EnergyConsumptionRecord> is 32
     // space for last_calculated_timestamp i64 is 8
     // space for depin_feed_address Pubkey is 32
-    const INIT_SPACE: usize = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 32;
+    // space for total_energy_saved u64 is 8
+    // space for total_energy_consumed u64 is 8
+    // space for bump u8 is 1
+    const INIT_SPACE: usize = 8 + 32 + 32 + 32 + 32 + 8 + 32 + 8 + 8 + 1;
 }
