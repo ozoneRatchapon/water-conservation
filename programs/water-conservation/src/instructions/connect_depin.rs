@@ -76,6 +76,7 @@ impl ConnectDepin<'_> {
             property_external_id,
             water_meter_accounts: Vec::from([self.water_meter_account.key()]),
             energy_meter_accounts: Vec::from([self.energy_meter_account.key()]),
+            bump: bumps.property_account,
         });
 
         self.water_meter_account.set_inner(WaterMeter {
@@ -108,6 +109,7 @@ impl ConnectDepin<'_> {
             owner: self.user.key(),
             total_reward_balance: 0,
             redemption_history: Vec::new(),
+            bump: bumps.reward_account,
         });
 
         Ok(())
