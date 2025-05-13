@@ -71,10 +71,12 @@ impl ConnectDepin<'_> {
             bump: bumps.user_data,
         });
 
-        let mut water_meter_accounts = self.property_account.water_meter_accounts.clone();
-        water_meter_accounts.push(self.water_meter_account.key());
-        let mut energy_meter_accounts = self.property_account.energy_meter_accounts.clone();
-        if track_energy {
+        let mut water_meter_accounts = std::mem::take(&mut self.property_account.water_meter_accounts);
+        if !water_meter_accounts.contains(&self.water_meter_account.key()) {
+            water_meter_accounts.push(self.water_meter_account.key());
+        }
+        let mut energy_meter_accounts = std::mem::take(&mut self.property_account.energy_meter_accounts);
+        if track_energy && !energy_meter_accounts.contains(&self.energy_meter_account.key()) {
             energy_meter_accounts.push(self.energy_meter_account.key());
         }
         self.property_account.set_inner(Property {
