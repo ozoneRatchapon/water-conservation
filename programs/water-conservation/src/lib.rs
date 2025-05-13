@@ -20,6 +20,7 @@ pub mod water_conservation {
         energy_external_id: String,
         water_depin_feed_address: Pubkey,
         energy_depin_feed_address: Pubkey,
+        track_energy: bool,
     ) -> Result<()> {
         ctx.accounts.connect_depin_feed_address(
             property_external_id,
@@ -27,6 +28,7 @@ pub mod water_conservation {
             energy_external_id,
             water_depin_feed_address,
             energy_depin_feed_address,
+            track_energy,
             &ctx.bumps,
         )
     }
