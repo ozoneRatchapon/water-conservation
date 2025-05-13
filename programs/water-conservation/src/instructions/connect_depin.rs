@@ -71,15 +71,17 @@ impl ConnectDepin<'_> {
             bump: bumps.user_data,
         });
 
+        let mut water_meter_accounts = self.property_account.water_meter_accounts.clone();
+        water_meter_accounts.push(self.water_meter_account.key());
+        let mut energy_meter_accounts = self.property_account.energy_meter_accounts.clone();
+        if track_energy {
+            energy_meter_accounts.push(self.energy_meter_account.key());
+        }
         self.property_account.set_inner(Property {
             owner: self.user.key(),
             property_external_id,
-            water_meter_accounts: vec![self.water_meter_account.key()],
-            energy_meter_accounts: if track_energy {
-                vec![self.energy_meter_account.key()]
-            } else {
-                vec![]
-            },
+            water_meter_accounts,
+            energy_meter_accounts,
             bump: bumps.property_account,
         });
 
