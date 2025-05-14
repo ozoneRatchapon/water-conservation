@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-water_conservation = "CYgCc27FKtjZBwkDjeZ6VfyiifvbdBv9e9Q8Zn872jAK"
+water_conservation = "6LVvE5CKocFdR2ozS7URNpieUego5Wu9wjM6WiERm4nS"
 
 [registry]
 url = "https://api.apr.dev"
@@ -16,5 +16,4 @@ cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-# comprehensive-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/comprehensive/**/*.ts"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

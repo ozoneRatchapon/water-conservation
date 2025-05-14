@@ -7,7 +7,7 @@ pub mod state;
 
 use crate::instructions::*;
 
-declare_id!("CYgCc27FKtjZBwkDjeZ6VfyiifvbdBv9e9Q8Zn872jAK");
+declare_id!("6LVvE5CKocFdR2ozS7URNpieUego5Wu9wjM6WiERm4nS");
 
 #[program]
 pub mod water_conservation {
