@@ -21,7 +21,7 @@ pub struct ReceiveEnvironmentData<'info> {
     #[account(
         mut,
         has_one = property,
-        seeds = [b"water_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes()],
+        seeds = [b"water_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes(), water_meter_account.water_external_id.as_bytes()],
         bump
     )]
     pub water_meter_account: Account<'info, WaterMeter>,
@@ -29,7 +29,7 @@ pub struct ReceiveEnvironmentData<'info> {
     #[account(
         mut,
         has_one = property,
-        seeds = [b"energy_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes()],
+        seeds = [b"energy_meter", user_data.owner.key().as_ref(), property.property_external_id.as_bytes(), energy_meter_account.energy_external_id.as_bytes()],
         bump
     )]
     pub energy_meter_account: Account<'info, EnergyMeter>,
