@@ -40,8 +40,7 @@ pub struct ConnectDepin<'info> {
             payer = user,
             space = EnergyMeter::INIT_SPACE,
             seeds = [b"energy_meter", user.key().as_ref(), property_external_id.as_bytes(), energy_external_id.as_bytes()],
-            bump,
-            constraint = track_energy
+            bump
         )]
     pub energy_meter_account: Account<'info, EnergyMeter>,
 

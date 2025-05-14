@@ -13,10 +13,10 @@ describe("water-conservation", () => {
   const user = provider.wallet.publicKey;
 
   // Derive PDAs
-  const [userData] = anchor.web3.PublicKey.findProgramAddressSync(
+  const userData = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("user_data"), user.toBytes()],
     program.programId,
-  );
+  )[0];
 
   // Test data
   const propertyExternalId = "property123";
@@ -25,36 +25,38 @@ describe("water-conservation", () => {
   const waterDepinFeedAddress = anchor.web3.SystemProgram.programId;
   const energyDepinFeedAddress = anchor.web3.SystemProgram.programId;
 
-  const [propertyAccount] = anchor.web3.PublicKey.findProgramAddressSync(
+  const propertyAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("property"), user.toBytes(), Buffer.from(propertyExternalId)],
     program.programId,
-  );
+  )[0];
 
-  const [waterMeterAccount] = anchor.web3.PublicKey.findProgramAddressSync(
+  const waterMeterAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from("water_meter"),
       user.toBytes(),
       Buffer.from(propertyExternalId),
+      Buffer.from(waterExternalId),
     ],
     program.programId,
-  );
+  )[0];
 
-  const [energyMeterAccount] = anchor.web3.PublicKey.findProgramAddressSync(
+  const energyMeterAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [
       Buffer.from("energy_meter"),
       user.toBytes(),
       Buffer.from(propertyExternalId),
+      Buffer.from(energyExternalId),
     ],
     program.programId,
-  );
+  )[0];
 
-  const [rewardAccount] = anchor.web3.PublicKey.findProgramAddressSync(
+  const rewardAccount = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("user_reward"), user.toBytes()],
     program.programId,
-  );
+  )[0];
 
   const systemProgram = anchor.web3.SystemProgram.programId;
-
+  const track_energy = true;
   // Test connect_depin instruction
   it("Initialize user and connect DePIN feeds", async () => {
     const tx = await program.methods
@@ -64,6 +66,7 @@ describe("water-conservation", () => {
         energyExternalId,
         waterDepinFeedAddress,
         energyDepinFeedAddress,
+        track_energy,
       )
       .accounts({
         user,
@@ -91,9 +94,11 @@ describe("water-conservation", () => {
     assert.ok(
       propertyAccountData.waterMeterAccounts[0].equals(waterMeterAccount),
     );
-    assert.ok(
-      propertyAccountData.energyMeterAccounts[0].equals(energyMeterAccount),
-    );
+    if (track_energy) {
+      assert.ok(
+        propertyAccountData.energyMeterAccounts[0].equals(energyMeterAccount),
+      );
+    }
   });
 
   // Test receive water usage and calculate reward
