@@ -7,6 +7,7 @@ Greenmove is a Solana-powered protocol that rewards you for saving water **and**
 Connect your utility accounts, track your usage, and earn points you can redeem at local businesses.
 
 *For this Proof of Concept, usage data is entered manually. In the future, we’ll use DePIN (Decentralized Physical Infrastructure Networks) to make your usage data accurate, transparent, and tamper-proof!*
+
 ---
 
 ## 🌟 Why Greenmove?
