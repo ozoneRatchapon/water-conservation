@@ -1,210 +1,189 @@
-# Greenmove Protocol
+# 💧 + ⚡ = 🟩 Greenmove Protocol
 
-## Project Overview
+Welcome to **Greenmove**!  
+Our mission: Turn your water 💧 and energy ⚡ savings into a greener 🌱, more sustainable future.
 
-Greenmove is a Solana-based protocol designed to incentivize water conservation by rewarding users with points that can be redeemed at local businesses. The protocol leverages DePIN (Decentralized Physical Infrastructure Networks) to obtain accurate water usage data, creating a transparent and verifiable system for tracking and rewarding conservation efforts.
+Greenmove is a Solana-powered protocol that rewards you for saving water **and** energy! 🌱💦⚡  
+Connect your utility accounts, track your usage, and earn points you can redeem at local businesses.
 
-## Value Proposition
+*For this Proof of Concept, usage data is entered manually. In the future, we’ll use DePIN (Decentralized Physical Infrastructure Networks) to make your usage data accurate, transparent, and tamper-proof!*
+---
 
-* Promotes environmental sustainability by encouraging water conservation.
-* Supports local economies by driving customers to participating businesses.
-* Provides tangible benefits to users for their eco-conscious behavior.
-* Creates a community-driven approach to resource management.
+## 🌟 Why Greenmove?
 
-## Target Users
+- 🌍 **Save the planet:** Every drop and every watt counts!
+- 🛍️ **Support local:** Redeem your points at your favorite cafes, shops, and service providers.
+- 🎁 **Get rewarded:** Eco-friendly habits = real-world rewards!
+- 🤝 **Build community:** Join a movement for a greener, more sustainable future.
 
-* Urban and suburban households in Thailand (initially Bangkok)
-* Environmentally conscious individuals in Thailand
-* Local businesses (restaurants, cafes, shops, service providers) in Thailand
-* Metropolitan Waterworks Authority (MWA) and Provincial Waterworks Authority (PWA) in Thailand (potential partners)
+---
 
-## Program Architecture (Smart Contract)
+## 👤 Who’s Greenmove for?
 
-The Greenmove protocol is implemented as a Solana smart contract program. It defines the following key components:
+- 🏠 Households in Thailand (starting with Bangkok)
+- 🌏 Eco-conscious individuals
+- 🏪 Local businesses (cafes, shops, etc.)
+- 💧 Water authorities (MWA, PWA) & ⚡ Energy providers — potential partners!
 
-###   1. Accounts
+---
 
-* **User Data Account:**
-    * Stores user-specific data related to water usage, reward points, and redemption history.
-    * Key Fields:
-        * `owner: Pubkey`: The user's Solana wallet address.
-        * `water_account_id: String`: Identifier for the user's external water account (e.g., MWA customer ID).
-        * `depin_feed_address: Pubkey`: Address of the Switchboard feed providing water usage data.
-        * `usage_history: Vec<UsageRecord>`: History of water usage records.
-            * `UsageRecord: { timestamp: i64, usage: u64 }`
-        * `baseline_usage: u64`: User's baseline water consumption.
-        * `reward_token_balance: u64`: User's Greenmove point balance.
-        * `redemption_history: Vec<RedemptionRecord>`: History of reward redemptions.
-            * `RedemptionRecord: { timestamp: i64, reward_id: String, token_amount: u64 }`
-        * `registration_timestamp: i64`: Timestamp of user registration.
-* **(Optional) Reward Offer Account:**
-    * Stores information about reward offers provided by local businesses.
-    * Key Fields:
-        * `offer_id: String`: Unique identifier for the reward offer.
-        * `business_owner: Pubkey`: Solana address of the business owner.
-        * `description: String`: Description of the reward.
-        * `point_cost: u64`: Cost of the reward in Greenmove points.
-        * `quantity_available: u64`: Number of rewards available.
-        * `start_time: i64`: Timestamp when the reward offer starts.
-        * `end_time: i64`: Timestamp when the reward offer ends.
+## 🛠️ How Greenmove Works (Under the Hood)
 
-###   2. Instructions
+Greenmove is a Solana smart contract program. Here’s how it all fits together:
 
-The Greenmove program provides the following instructions:
+### 1️⃣ Accounts
 
-* **`ConnectDePINFeedAddress` (or `ConnectExternalAccount`):**
-    * Allows users to link their external water account (e.g., MWA account) by providing their account identifier.
-    * Stores the DePIN feed address in the `User Data Account`.
-    * * Parameters:
-            * `water_account_id: String`
-            * `depin_feed_address: Pubkey`
-* **`ReceiveWaterUsage`:**
-    * Receives water usage data from the designated DePIN feed.
-    * Updates the `usage_history` in the `User Data Account`.
-    * Triggers the `CalculateBaseline` and `CalculateRewards` logic.
-    * * Parameters:
-            * `usage_data: Vec<UsageRecord>` (or individual UsageRecord)
-* **`CalculateBaseline`:**
-    * Calculates the user's baseline water consumption based on their `usage_history`.
-    * Updates the `baseline_usage` in the `User Data Account`.
-    * * Parameters: (Potentially none, or a window of history to use)
-            * `history_window: u64` (e.g., number of months to average)
-* **`CalculateRewards` (or part of `ReceiveWaterUsage`):**
-    * Calculates the user's water savings by comparing current usage with the `baseline_usage`.
-    * Determines the number of Greenmove points to award based on predefined rules.
-    * Updates the `reward_token_balance` in the `User Data Account`.
-    * * Parameters:
-            * `current_usage: u64`
-* **`RedeemReward`:**
-    * Allows users to redeem their Greenmove points for rewards.
-    * Deducts the reward cost from the `reward_token_balance`.
-    * Creates a `RedemptionRecord` and adds it to the `redemption_history`.
-    * * Parameters:
-            * `reward_id: String`
-            * `token_amount: u64`
-* **(Optional) Reward Offer Management Instructions:**
-    * **`CreateRewardOffer`:** Allows businesses to create new reward offers.
-        * * Parameters:
-                * `offer_id: String`
-                * `description: String`
-                * `point_cost: u64`
-                * `quantity_available: u64`
-                * `start_time: i64`
-                * `end_time: i64`
-    * **`UpdateRewardOffer`:** Allows businesses to modify existing reward offers.
-        * * Parameters: (Varies based on what can be updated)
-                * `offer_id: String`
-                * `new_description: String` (Optional)
-                * `new_point_cost: u64` (Optional)
-                * ...
-    * **`DeleteRewardOffer`:** Allows businesses to remove reward offers.
-        * * Parameters:
-                * `offer_id: String`
+- **User Data Account:**  
+  Stores your water & energy usage, points, and redemption history.
+  - `owner`: Your Solana wallet
+  - `water_account_id` / `energy_account_id`: Your utility company customer IDs
+  - `usage_history`: List of your water & energy usage records
+  - `baseline_usage`: Your average usage (for rewards)
+  - `reward_token_balance`: Your Greenmove points
+  - `redemption_history`: What you’ve redeemed
+  - `registration_timestamp`: When you joined
 
-###   3. Program Logic
+- **Reward Offer Account (optional):**  
+  Businesses can create offers you can redeem with points!
+  - `offer_id`, `business_owner`, `description`, `point_cost`, `quantity_available`, `start_time`, `end_time`
 
-The Greenmove program implements the following core logic:
+---
 
-* **Data Validation:**
-    * Validates input data (e.g., account identifiers, reward IDs).
-    * Ensures sufficient point balance before redemption.
-    * (Optional) Implements access control for reward offer management.
-* **Water Savings Calculation:**
-    * Calculates the difference between the user's current water usage and their baseline usage.
-    * * Example: `savings = baseline_usage.saturating_sub(current_usage)`
-* **Reward Point Calculation:**
-* Determines the number of points to award based on the calculated water savings.
-    * The protocol supports different reward calculation methods:
+### 2️⃣ What Can You Do? (Instructions)
 
-        * **1. Standard:**
-            * **1.1 Use a Shorter-Term Average:** The baseline usage is calculated as the average water consumption over the previous 6 months.
-            * The points are awarded based on the percentage reduction in water consumption compared to the baseline:
-                * If the reduction is 16% or more, award 100 points.
-                * If the reduction is 11% or more, award 50 points.
-                * If the reduction is 6% or more, award 25 points.
-                * If the reduction is 1% or more, award 10 points.
-                * If none of the above conditions are met (i.e., no reduction or increased consumption), award 0 points.
-            * * Example:
-                ```
-                baseline_usage = calculate_6_month_average(usage_history);
-                reduction_percentage = (baseline_usage - current_usage) * 100 / baseline_usage;
+- **ConnectExternalAccount:**  
+  Link your water and/or energy account (manual input for PoC).
+- **ReceiveUsage:**  
+  Add new water or energy usage data (manual input for PoC).  
+  👉 This also triggers baseline and reward calculations!
+- **CalculateBaseline:**  
+  Figure out your average usage (usually over 6 months).
+- **CalculateRewards:**  
+  See how much you’ve saved vs. your baseline and get points!
+- **RedeemReward:**  
+  Spend your points on cool stuff from local businesses.
+- **Reward Offer Management (for businesses):**  
+  Create, update, or delete reward offers.
 
-                if reduction_percentage >= 16 {
-                    points = 100;
-                } else if reduction_percentage >= 11 {
-                    points = 50;
-                } else if reduction_percentage >= 6 {
-                    points = 25;
-                } else if reduction_percentage >= 1 {
-                    points = 10;
-                } else {
-                    points = 0;
-                }
-                ```
+---
 
-        * **2. Campaign:**
-            * (TBD)
+### 3️⃣ How Rewards Work
 
-        * **3. Tournament:**
-            * (TBD)
+- **Savings Calculation:**  
+  We compare your latest usage (water or energy) to your baseline (average).
+- **Points Calculation:**  
+  The more you save, the more you earn:
+  - 💯 16%+ reduction = 100 points
+  - 🥈 11%+ = 50 points
+  - 🥉 6%+ = 25 points
+  - 👍 1%+ = 10 points
+  - 😅 No reduction = 0 points
 
-* **Reward Redemption Logic:**
-    * Handles the deduction of points and the recording of redemption events.
-    * Example:
-        ```
-        user_data_account.reward_token_balance -= token_amount;
-        ```
+  ```rust
+  // Example logic
+  baseline_usage = calculate_6_month_average(usage_history);
+  reduction_percentage = (baseline_usage - current_usage) * 100 / baseline_usage;
 
-###   4. User Stories and Functionality Mapping
+  if reduction_percentage >= 16 {
+      points = 100;
+  } else if reduction_percentage >= 11 {
+      points = 50;
+  } else if reduction_percentage >= 6 {
+      points = 25;
+  } else if reduction_percentage >= 1 {
+      points = 10;
+  } else {
+      points = 0;
+  }
+  ```
 
-|   User Story ID   |   User Story   |   Smart Contract Functionality   |
-| :---------------- | :------------- | :------------------------------- |
-|   GM-001a         |   As a homeowner, I want to securely connect my MWA account using my customer ID so that my monthly water usage is automatically fetched and displayed in the app.   |   `ConnectDePINFeedAddress` (stores `water_account_id`)   |
-|   GM-001b         |   As a homeowner, I want to see a clear comparison of my current month's water usage to my average usage or a community average so that I can understand my conservation progress.   |   `ReceiveWaterUsage` (stores `usage_history`), `CalculateBaseline` (stores `baseline_usage`), `CalculateRewards` (calculates savings)   |
-|   GM-002a         |   As a homeowner, I want to automatically earn Greenmove points each month based on the amount of water I save so that I am incentivized to continue conserving.   |   `ReceiveWaterUsage` (or `CalculateRewards`) (calculates and updates `reward_token_balance`)   |
-|   GM-003a         |   As a Greenmove user, I want to browse a marketplace of local businesses offering rewards that I can redeem with my Greenmove points so that I can support my community and enjoy the benefits of my conservation efforts.   |   `RedeemReward` (deducts points, records redemption), (Optional: `RewardOffer` accounts and management instructions for marketplace functionality)   |
-|   GM-004a         |   As a local cafe owner, I want to create and manage reward offers (e.g., discounts) for Greenmove users based on their point balance so that I can incentivize sustainable behavior and attract new customers.   |   (Optional: `CreateRewardOffer`, `UpdateRewardOffer`, `DeleteRewardOffer` instructions and `RewardOffer` accounts)   |
+- **Redeeming Points:**  
+  When you redeem, your points go down and a redemption record is saved.
 
-###   5. External Integrations
+---
 
-* **DePIN Oracles (Switchboard):**
-    * The Greenmove protocol relies on DePIN oracles like Switchboard to provide accurate and reliable water usage data. This ensures transparency and reduces the risk of data manipulation.
-* **(Potential) MWA/PWA Integration:**
-    * Direct integration with the Metropolitan Waterworks Authority (MWA) and/or Provincial Waterworks Authority (PWA) could streamline the process of fetching water usage data and improve data accuracy. This would likely involve APIs provided by these authorities.
-* **(Potential) Payment Processing:**
-    * If reward redemption involves any on-chain transactions (e.g., transferring SPL tokens), integration with a payment processing service might be necessary.
+### 4️⃣ User Stories and Functionality Mapping
 
-###   6. Security Considerations
+| User Story | What It Means | Smart Contract Functionality |
+|------------|--------------|-----------------------------|
+| Connect your utility account | Link your MWA/PWA or energy provider account for auto data (manual for PoC) | `ConnectExternalAccount` |
+| See your usage & progress | Compare this month to your average | `ReceiveUsage`, `CalculateBaseline`, `CalculateRewards` |
+| Earn points for saving | Get rewarded for using less water or energy | `ReceiveUsage`/`CalculateRewards` |
+| Redeem points for rewards | Spend points at local businesses | `RedeemReward`, `RewardOffer` management |
+| Businesses create offers | Local shops can offer rewards | `CreateRewardOffer`, `UpdateRewardOffer`, `DeleteRewardOffer` |
 
-* **Data Validation:**
-    * Robust input validation is crucial to prevent malicious attacks and ensure data integrity.
-* **Access Control:**
-    * Appropriate access control mechanisms should be implemented to restrict access to sensitive functions (e.g., reward offer management).
-* **Security Audits:**
-    * Regular security audits are essential to identify and address potential vulnerabilities in the smart contract code.
-* **Immutable Code:**
-    * Once deployed, the smart contract code should be immutable to prevent unauthorized modifications.
+---
 
-###   7. Future Enhancements
+### 5️⃣ Integrations
 
-* **Dynamic Reward Systems:**
-    * Implement more sophisticated reward systems that adapt to changing water conservation goals or user behavior.
-* **Gamification:**
-    * Incorporate gamification elements to further incentivize water conservation (e.g., badges, leaderboards).
-* **Community Features:**
-    * Add features that foster a sense of community among users (e.g., forums, social sharing).
-* **Expansion to Other Utilities:**
-    * Extend the protocol to incentivize the conservation of other utilities, such as electricity or gas.
+- **Manual Input (PoC):**  
+  For this proof of concept, usage data is entered manually.
+- **DePIN Oracles (Switchboard) — Future:**  
+  We plan to use oracles to fetch your water & energy usage data securely and transparently.
+- **(Planned) MWA/PWA & Energy Provider Integration:**  
+  Direct API connections for even more accurate data.
+- **(Planned) Payment Processing:**  
+  On-chain payments for reward redemption (e.g., SPL tokens).
+- **Frontend Color Blend:**  
+  Our frontend visually blends blue (💧) and yellow (⚡) to create a unique shade of green (🟩) each day—reflecting the living, growing impact of our community’s water and energy savings.
 
-###   8. Development Status
-// in progress
+---
 
-### Additional Resources
+### 6️⃣ Security & Upgradability 🔒
 
-* Project Planning and Details: [Greenmove Project Details](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
+- **Input validation:** No funny business with your data.
+- **Access control:** Only you can update your info; only businesses manage their offers.
+- **Audits:** We review our code for safety.
+- **Upgradeable:**  
+  Solana programs can be upgraded if you keep the upgrade authority. This means we can add new features or fix bugs, but can’t remove old features or change history.  
+  (If the upgrade authority is renounced, the program becomes immutable.)
 
-## Deployed Program (Devnet)
+---
 
-The Greenmove Solana program (water conservation) is deployed on devnet with the following details:
+### 7️⃣ Roadmap
 
-- **Program ID:** 6LVvE5CKocFdR2ozS7URNpieUego5Wu9wjM6WiERm4nS 
+**Today:**  
+✅ Proof of concept complete; tracking infrastructure established.
+
+**Phase 1 (3-6 Months):**  
+- MVP finalization  
+- Community partnerships secured
+
+**Phase 2 (6-12 Months):**  
+- Pilot launch with users  
+- Initial points system
+
+**Phase 3 (12-18 Months):**  
+- DePIN integration starts  
+- Local rewards onboarded
+
+**Phase 4 & Beyond:**  
+- Scale ecosystem  
+- Tokenization planning  
+- Broader adoption
+
+---
+
+### 8️⃣ Status
+
+🎉 **Proof of Concept: Done!**  
+(Manual input, core tracking and rewards logic working.)
+
+---
+
+## 📚 Resources
+
+- [Greenmove Project Details (Google Sheets)](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
+
+---
+
+## 🧑‍💻 Deployed Program (Devnet)
+
+The Greenmove Solana program (water & energy conservation) is deployed on devnet:
+
+- **Program ID:** 6LVvE5CKocFdR2ozS7URNpieUego5Wu9wjM6WiERm4nS
+
+---
+
+Thanks for checking out Greenmove!  
+Let’s save water, energy, and build a greener future together! 💧⚡🟩🌱
