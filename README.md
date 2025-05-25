@@ -147,7 +147,7 @@ Greenmove is a Solana smart contract program. Here’s how it all fits together:
 ✅ Proof of concept complete; tracking infrastructure established.
 
 **Phase 1 (3-6 Months):**  
-- MVP finalization  
+- MVP finalization with Pinocchio 
 - Community partnerships secured
 
 **Phase 2 (6-12 Months):**  
@@ -174,7 +174,18 @@ Greenmove is a Solana smart contract program. Here’s how it all fits together:
 
 ## 📚 Resources
 
-- [Greenmove Project Details (Google Sheets)](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
+- [Pitch Video](https://www.youtube.com/watch?v=BWQSnwP5hBI)
+- [Technical Demo Video](https://www.youtube.com/watch?v=TpkopWAHOO0)
+- [Letter of Intent](https://docs.google.com/document/d/1kkMqne-SzWN5mJFg95JVARCcgG9ITbpxNLBwqhn4hz8/edit?tab=t.0)
+- [User Stories](https://docs.google.com/document/d/1Dpb_j8kbXYtqELoXmkU9bv1uRtuHRKKF18civexZWqA/edit?tab=t.0)
+- [Architecture Design](https://docs.google.com/document/d/17tKyNBVipTkv1_Pf0oVQGh0dJNx5lmJCYh2epf0klYY/edit?tab=t.0)
+- [Details (Google Sheets)](https://docs.google.com/spreadsheets/d/1cMpozqiYWtkpydqJ7kJoDdEDw09tvufJHCQP2K3Djqs/edit?gid=920189763#gid=920189763)
+
+---
+
+## Award
+
+- [Thailand Local Breakout Hackathon: 4th Prize Winner](https://youtu.be/GTnrXkePcLs?t=2222)
 
 ---
 
